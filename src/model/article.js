@@ -43,5 +43,22 @@ const articleSchema = new db.Schema({
 })
 
 const Article = db.model('Article', articleSchema)
+// Article.find({"title" : {$gt : 12}},function(err,docs){
+//     console.log(docs);
+// });
+// var user = new Article({
+//     title: 'first',
+//     tag: 'aaa'                  //最近登录时间
+// });
+// user.save(function (err, res) {
 
-module.exports = db
+//     if (err) {
+//         console.log("Error:" + err);
+//     }
+//     else {
+//         console.log("Res:" + res);
+//     }
+
+// })
+
+module.exports = Article

@@ -6,4 +6,10 @@ router.get('/index', async (ctx, next) => {
 	await next()
 })
 
+router.post('/addarticle', async (ctx, next) => {
+	console.log(ctx.request.body)
+	ctx.response.body = `<h1>Welcome,!</h1>`
+	await next()
+})
+
 module.exports = router

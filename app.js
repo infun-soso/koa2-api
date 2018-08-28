@@ -1,6 +1,8 @@
 const Koa = require('koa')
 const app = new Koa()
+const bodyParser = require('koa-bodyparser');
 
+app.use(bodyParser());
 const routers = require('koa-router')()
 const mongoose = require('./src/mongodb')
 
