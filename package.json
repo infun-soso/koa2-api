@@ -16,5 +16,8 @@
     "node": ">=6.0.0"
   },
   "author": "infun-soso",
-  "license": "CENTERM"
+  "license": "CENTERM",
+  "devDependencies": {
+    "mongoose-paginate": "^5.0.3"
+  }
 }
