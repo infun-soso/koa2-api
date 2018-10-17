@@ -50,4 +50,15 @@ router.post('/addarticle', async (ctx, next) => {
 	}) 
 })
 
+router.post('/login', async (ctx, next) => {
+	let req = ctx.request.body
+	ctx.body = {
+		code: 0,
+		data: {
+			username: req.username,
+			password: req.password
+		},
+		msg: 'success'
+	}
+})
 module.exports = router
