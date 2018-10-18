@@ -1,5 +1,6 @@
 const router = require('koa-router')()
 const Article = require('../model/article.js')
+const User = require('../model/user.js')
 
 router.get('/index', async (ctx, next) => {
 	let req = ctx.request.body
@@ -52,13 +53,28 @@ router.post('/addarticle', async (ctx, next) => {
 
 router.post('/login', async (ctx, next) => {
 	let req = ctx.request.body
-	ctx.body = {
-		code: 0,
-		data: {
-			username: req.username,
-			password: req.password
-		},
-		msg: 'success'
-	}
+	// 新建表不会显示 需要插入一条数据 数据类型要一致
+	await User.find({
+		username: req.username
+	}).then(result => {
+		if (result.length !== 0) {
+			ctx.body = {
+				code: 0,
+				data: {
+					username: req.username,
+					password: req.password
+				},
+				msg: '登录成功'
+			}
+		} else {
+			ctx.response.body = {
+				"code": 1,
+				"data": [],
+				"msg": '用户不存在'
+			}
+		} 
+	}).catch(err => {
+		console.log(err)
+	})
 })
 module.exports = router
