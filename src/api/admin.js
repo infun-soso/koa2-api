@@ -23,6 +23,29 @@ router.get('/index', async (ctx, next) => {
 	})
 })
 
+router.get('/post', async (ctx, next) => {
+	let req = ctx.query
+	await  Article.find({
+		"_id": req.postId
+	}).then(result => {
+		if (result) {
+			ctx.response.body = {
+				"code": 0,
+				"data": result,
+				"msg": 'success'
+			}
+		} else {
+			ctx.response.body = {
+				"code": 1,
+				"data": [],
+				"msg": 'error'
+			}
+		} 
+	}).catch(err => {
+		console.log(err)
+	})
+})
+
 router.post('/addarticle', async (ctx, next) => {
 	let req = ctx.request.body
 	const newLine = new Article({
