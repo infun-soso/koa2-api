@@ -2,6 +2,8 @@ const router = require('koa-router')()
 const Article = require('../model/article.js')
 const User = require('../model/user.js')
 
+const multer = require('koa-multer')
+const upload = multer()
 router.get('/index', async (ctx, next) => {
 	let req = ctx.request.body
 	await  Article.find().then(result => {
@@ -22,7 +24,7 @@ router.get('/index', async (ctx, next) => {
 		console.log(err)
 	})
 })
-
+console.log(upload.single('file'))
 router.get('/post', async (ctx, next) => {
 	let req = ctx.query
 	await  Article.find({
@@ -46,8 +48,10 @@ router.get('/post', async (ctx, next) => {
 	})
 })
 
-router.post('/addarticle', async (ctx, next) => {
-	let req = ctx.request.body
+router.post('/addarticle', upload.single('files[]'), async (ctx, next) => {
+	// multer 将发送数据代理到ctx.req.body 文件 ctx.req.file
+	// bodyparser 将发送数据代理到ctx.request.body
+	let req = ctx.req.body
 	const newLine = new Article({
 		title: req.articleTitle,
 		keyword: req.keywords,
