@@ -1,9 +1,22 @@
 const router = require('koa-router')()
 const Article = require('../model/article.js')
 const User = require('../model/user.js')
+const qiniu = require('qiniu')
+const config = require('../utils/qiniu')
 
 const multer = require('koa-multer')
 const upload = multer()
+
+var accessKey = '8Z3BdkVh2RyRuzsqVhAKK7Njo_6oUzlpSUt2M9Hf';
+var secretKey = 'HNCkhVc169GbiZ_Fp-F-4YYjx5Pdb4bXDx-hws-v';
+var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
+
+var options = {
+  scope: 'blog',
+};
+var putPolicy = new qiniu.rs.PutPolicy(options);
+var uploadToken = putPolicy.uploadToken(mac);
+
 router.get('/index', async (ctx, next) => {
 	let req = ctx.request.body
 	await  Article.find().then(result => {
@@ -24,7 +37,7 @@ router.get('/index', async (ctx, next) => {
 		console.log(err)
 	})
 })
-console.log(upload.single('file'))
+
 router.get('/post', async (ctx, next) => {
 	let req = ctx.query
 	await  Article.find({
@@ -58,6 +71,24 @@ router.post('/addarticle', upload.single('files[]'), async (ctx, next) => {
 		descript: req.description,
 		content: req.content
 	})
+	console.log(ctx.req.file)
+
+	var formUploader = new qiniu.form_up.FormUploader(config);
+	var putExtra = new qiniu.form_up.PutExtra();
+	var readableStream = ctx.req.file; // 可读的流
+	var key='pic.jpeg';
+	formUploader.putFile(uploadToken, key, readableStream, putExtra, function(respErr,
+		respBody, respInfo) {
+		if (respErr) {
+			throw respErr;
+		}
+		if (respInfo.statusCode == 200) {
+			console.log(respBody);
+		} else {
+			console.log(respInfo.statusCode);
+			console.log(respBody);
+		}
+	});
 
 	await newLine.save().then(res => {
 		if (res) {
