@@ -7,6 +7,9 @@ const articleSchema = new db.Schema({
     // 关键字
     keyword: { type: String, required: true },
 
+    // 图片
+    images: { type: String, required: false },
+
     // 描述
     descript: { type: String, required: false },
 
