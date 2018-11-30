@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-var db = mongoose.connect("mongodb://127.0.0.1:27017/my_blog", { useNewUrlParser: true });
+mongoose.connect("mongodb://127.0.0.1:27017/my_blog", { useNewUrlParser: true });
 
 //如果连接成功会执行error回调
 mongoose.connection.on("error", function (error) {

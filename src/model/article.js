@@ -18,6 +18,8 @@ const articleSchema = new db.Schema({
 
     // 内容
     content: { type: String, required: true },
+    
+    markdown: { type: String, required: true },
 
     // 状态 1 发布 2 草稿
     state: { type: Number, default: 1 },

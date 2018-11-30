@@ -75,11 +75,14 @@ const removeTemImage = (path) => {
 const ff = (ctx) => {
 	return new Promise(function(resolve, reject) {
 		var form = new formidable.IncomingForm()
+		form.multiples = true //设置允许多张上传 files就会是一个图片数组 否则会覆盖只有一张
 		var targetFile = path.join(__dirname, '../uploads')
 		form.uploadDir = targetFile
 		
 		form.parse(ctx.req, (err, fields, files) =>{
 			if(err) throw err
+			// 一张 files 为对象， 多张 为数组
+			if (!files) return
 			let info = files.file.name.split('.')
 			let nameText = info[0] + Date.now()
 			const key = `blog/${md5(nameText)}.${info[info.length - 1]}`
@@ -95,10 +98,12 @@ const ff = (ctx) => {
 						keyword: fields.keywords,
 						descript: fields.description,
 						content: fields.content,
-						images: domain + respBody.key
+						images: domain + respBody.key,
+						markdown: fields.markdown
 					})
 					newLine.save().then(data => {
 						removeTemImage(files.file.path)
+
 						if (data) {
 							ctx.response.body = {
 								"code": 0,
@@ -132,6 +137,32 @@ router.post('/addarticle',async (ctx, next) => {
 	} catch (error) {
 		console.log(error)
 	}
+})
+
+router.post('/updatearticle',async (ctx, next) => {
+	console.log(ctx.request.body)
+	const req = ctx.request.body
+	await Article.update({'_id': req.postId}, {
+		content: req.content,
+		markdown: req.markdown,
+		descript: req.description,
+		keyword: req.keywords,
+		title: req.articleTitle,
+	}).then(res => {
+		if (res) {
+			ctx.response.body = {
+				"code": 0,
+				"data": [],
+				"msg": 'success'
+			}
+		} else {
+			ctx.response.body = {
+				"code": 1,
+				"data": [],
+				"msg": 'error'
+			}
+		} 
+	})
 })
 
 router.post('/login', async (ctx, next) => {
