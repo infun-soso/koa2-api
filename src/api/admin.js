@@ -72,7 +72,7 @@ const removeTemImage = (path) => {
     }
   })
 }
-const ff = (ctx) => {
+const dealReq = (ctx) => {
 	return new Promise(function(resolve, reject) {
 		var form = new formidable.IncomingForm()
 		form.multiples = true //设置允许多张上传 files就会是一个图片数组 否则会覆盖只有一张
@@ -92,6 +92,7 @@ const ff = (ctx) => {
 				if (respErr) {
 					throw respErr
 				}
+				const tag = fields.tag.split(',')
 				if (respInfo.statusCode == 200) {
 					const newLine = new Article({
 						title: fields.articleTitle,
@@ -99,7 +100,8 @@ const ff = (ctx) => {
 						descript: fields.description,
 						content: fields.content,
 						images: domain + respBody.key,
-						markdown: fields.markdown
+						markdown: fields.markdown,
+						tag: tag
 					})
 					newLine.save().then(data => {
 						removeTemImage(files.file.path)
@@ -133,7 +135,7 @@ router.post('/addarticle',async (ctx, next) => {
 	// multer 将发送数据代理到ctx.req.body 文件 ctx.req.file
 	// bodyparser 将发送数据代理到ctx.request.body
 	try {
-		await ff(ctx)
+		await dealReq(ctx)
 	} catch (error) {
 		console.log(error)
 	}
@@ -148,6 +150,7 @@ router.post('/updatearticle',async (ctx, next) => {
 		descript: req.description,
 		keyword: req.keywords,
 		title: req.articleTitle,
+		tag: req.tag
 	}).then(res => {
 		if (res) {
 			ctx.response.body = {

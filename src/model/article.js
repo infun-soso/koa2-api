@@ -14,7 +14,7 @@ const articleSchema = new db.Schema({
     descript: { type: String, required: false },
 
     // 标签
-    tag: [{ type: db.Schema.Types.ObjectId, ref: 'Tag' }],
+    tag: [],
 
     // 内容
     content: { type: String, required: true },
