@@ -11,7 +11,7 @@ const formidable = require('formidable')
 // const multer = require('koa-multer')
 // const upload = multer()
 
-const domain = 'http://pismv59oz.bkt.clouddn.com/'
+const domain = 'http://pic.wyfs.top/'
 var accessKey = '8Z3BdkVh2RyRuzsqVhAKK7Njo_6oUzlpSUt2M9Hf'
 var secretKey = 'HNCkhVc169GbiZ_Fp-F-4YYjx5Pdb4bXDx-hws-v'
 var mac = new qiniu.auth.digest.Mac(accessKey, secretKey)
@@ -89,10 +89,8 @@ const dealReq = (ctx) => {
 			const formUploader = new qiniu.form_up.FormUploader(config)
 			const putExtra = new qiniu.form_up.PutExtra()
 			formUploader.putFile(uploadToken, key, files.file.path, putExtra, (respErr, respBody, respInfo) => {
-				if (respErr) {
-					throw respErr
-				}
-				const tag = fields.tag.split(',')
+				if (respErr) throw respErr
+				const tag = fields.tags.split(',')
 				if (respInfo.statusCode == 200) {
 					const newLine = new Article({
 						title: fields.articleTitle,
@@ -105,7 +103,6 @@ const dealReq = (ctx) => {
 					})
 					newLine.save().then(data => {
 						removeTemImage(files.file.path)
-
 						if (data) {
 							ctx.response.body = {
 								"code": 0,
@@ -131,7 +128,7 @@ const dealReq = (ctx) => {
 	})
 }
 
-router.post('/addarticle',async (ctx, next) => {
+router.post('/addArticle',async (ctx, next) => {
 	// multer 将发送数据代理到ctx.req.body 文件 ctx.req.file
 	// bodyparser 将发送数据代理到ctx.request.body
 	try {
@@ -141,7 +138,7 @@ router.post('/addarticle',async (ctx, next) => {
 	}
 })
 
-router.post('/updatearticle',async (ctx, next) => {
+router.post('/updateArticle',async (ctx, next) => {
 	console.log(ctx.request.body)
 	const req = ctx.request.body
 	await Article.update({'_id': req.postId}, {
