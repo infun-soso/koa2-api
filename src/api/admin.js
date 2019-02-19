@@ -147,7 +147,7 @@ router.post('/updateArticle',async (ctx, next) => {
 		descript: req.description,
 		keyword: req.keywords,
 		title: req.articleTitle,
-		tag: req.tag
+		tag: req.tags
 	}).then(res => {
 		if (res) {
 			ctx.response.body = {
