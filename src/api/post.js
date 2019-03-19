@@ -7,6 +7,7 @@ const path = require('path')
 const md5 = require('md5')
 const fs = require('fs')
 
+
 const formidable = require('formidable')
 // const multer = require('koa-multer')
 // const upload = multer()
@@ -44,27 +45,38 @@ router.get('/index', async (ctx, next) => {
 })
 
 router.get('/post', async (ctx, next) => {
-	let req = ctx.query
-	await  Article.find({
-		"_id": req.postId
-	}).then(result => {
-		if (result) {
-			ctx.response.body = {
-				"code": 0,
-				"data": result,
-				"msg": 'success'
-			}
-		} else {
-			ctx.response.body = {
-				"code": 1,
-				"data": [],
-				"msg": 'error'
-			}
-		} 
-	}).catch(err => {
-		console.log(err)
-	})
+	const id = ctx.query.postId
+	await Article.findOne({ "_id": id })
+	        .then(async data => {
+						console.log(data)
+						let fields = {};
+						data.meta.views = data.meta.views + 1;
+						fields.meta = data.meta;
+						await Article.updateOne({ _id: id }, fields)
+							.then(result => {
+								if (result) {
+									ctx.response.body = {
+										"code": 0,
+										"data": data,
+										"msg": 'success'
+									}
+								} else {
+									ctx.response.body = {
+										"code": 1,
+										"data": [],
+										"msg": 'error'
+									}
+								} 
+							})
+							.catch(err => {
+								console.error('err :', err);
+								throw err;
+							});
+					}).catch(err => {
+						console.log(err)
+					})
 })
+
 const removeTemImage = (path) => {
   fs.unlink(path, (err) => {
     if (err) {
@@ -191,4 +203,5 @@ router.post('/login', async (ctx, next) => {
 		console.log(err)
 	})
 })
+
 module.exports = router

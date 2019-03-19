@@ -12,11 +12,9 @@ app.use(bodyParser({
 const routers = require('koa-router')()
 const mongoose = require('./src/mongodb')
 
-const adminApi = require('./src/api/admin')
+const postApi = require('./src/api/post')
 // const clientApi = require('./api/client')
-
-routers.use('/admin', adminApi.routes(), adminApi.allowedMethods())
-
+routers.use('/admin', postApi.routes(), postApi.allowedMethods())
 app.use(routers.routes()).use(routers.allowedMethods())
 
 app.listen(4000, function() {

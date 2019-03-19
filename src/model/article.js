@@ -34,10 +34,10 @@ const articleSchema = new db.Schema({
     type: { type: Number },
 
     // 发布日期
-    create_at: { type: Date, default: Date.now },
+    create_at: { type: Date, default: new Date() },
 
     // 最后修改日期
-    update_at: { type: Date, default: Date.now },
+    update_at: { type: String, default: Date.now() },
 
     // 其他元信息
     meta: {
