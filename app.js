@@ -13,8 +13,10 @@ const routers = require('koa-router')()
 const mongoose = require('./src/mongodb')
 
 const postApi = require('./src/api/post')
+const commentApi = require('./src/api/comment')
 // const clientApi = require('./api/client')
 routers.use('/admin', postApi.routes(), postApi.allowedMethods())
+routers.use('/comment', commentApi.routes(), commentApi.allowedMethods())
 app.use(routers.routes()).use(routers.allowedMethods())
 
 app.listen(4000, function() {

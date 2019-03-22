@@ -24,6 +24,7 @@ var putPolicy = new qiniu.rs.PutPolicy(options)
 var uploadToken = putPolicy.uploadToken(mac)
 
 router.get('/index', async (ctx, next) => {
+	console.log(1111111)
 	let req = ctx.request.body
 	await  Article.find().then(result => {
 		if (result) {
@@ -48,7 +49,6 @@ router.get('/post', async (ctx, next) => {
 	const id = ctx.query.postId
 	await Article.findOne({ "_id": id })
 	        .then(async data => {
-						console.log(data)
 						let fields = {};
 						data.meta.views = data.meta.views + 1;
 						fields.meta = data.meta;

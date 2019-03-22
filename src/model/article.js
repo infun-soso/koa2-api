@@ -39,6 +39,8 @@ const articleSchema = new db.Schema({
     // 最后修改日期
     update_at: { type: String, default: Date.now() },
 
+    comments: [{ type: db.Schema.Types.ObjectId, ref: 'Comment', required: true }],
+
     // 其他元信息
     meta: {
         views: { type: Number, default: 0 },

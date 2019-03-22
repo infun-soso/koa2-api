@@ -5,8 +5,9 @@
  * @author infun <https://github.com/infun-soso>
  */
 
-const db = require('../mongodb')
+const mongoose = require('../mongodb')
 const autoIncrement = require('mongoose-auto-increment');
+autoIncrement.initialize(mongoose.connection);
 
 // 评论模型
 const commentSchema = new mongoose.Schema({
@@ -25,7 +26,7 @@ const commentSchema = new mongoose.Schema({
 	// 用户 id
 	user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 
-	// 父评论的用户信息
+	// 评论的用户信息
 	user: {
 		// 用户id
 		user_id: { type: mongoose.Schema.Types.ObjectId },

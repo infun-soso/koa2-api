@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "busboy": "^0.2.14",
+    "crypto": "^1.0.1",
     "formidable": "^1.2.1",
     "koa": "^2.0.0",
     "koa-bodyparser": "^4.2.1",
@@ -12,11 +13,13 @@
     "koa-router": "^7.0.0",
     "md5": "^2.2.1",
     "mongoose": "^5.2.9",
+    "mongoose-auto-increment": "^5.0.1",
+    "nodeman": "^1.1.2",
     "qiniu": "^7.2.1",
-    "mongoose-auto-increment": "^5.0.1"
+    "yargs": "^13.2.2"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "engines": {
     "node": ">=6.0.0"
