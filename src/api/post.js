@@ -1,5 +1,6 @@
 const router = require('koa-router')()
 const Article = require('../model/article.js')
+const Comment = require('../model/comment.js')
 const User = require('../model/user.js')
 const qiniu = require('qiniu')
 const config = require('../utils/qiniu')
@@ -24,9 +25,8 @@ var putPolicy = new qiniu.rs.PutPolicy(options)
 var uploadToken = putPolicy.uploadToken(mac)
 
 router.get('/index', async (ctx, next) => {
-	console.log(1111111)
 	let req = ctx.request.body
-	await  Article.find().then(result => {
+	await Article.find().then(result => {
 		if (result) {
 			ctx.response.body = {
 				"code": 0,
@@ -50,6 +50,8 @@ router.get('/post', async (ctx, next) => {
 	await Article.findOne({ "_id": id })
 	        .then(async data => {
 						let fields = {};
+						const CommnetResult = await Comment.find({ _id: { $in: data.comments } })
+						data.comments = CommnetResult
 						data.meta.views = data.meta.views + 1;
 						fields.meta = data.meta;
 						await Article.updateOne({ _id: id }, fields)
