@@ -1,6 +1,7 @@
 const User = require('../model/user')
 const router = require('koa-router')()
 const crypto = require('crypto')
+const jsonwebtoken = require('jsonwebtoken')
 
 const md5 = (pwd) => {
   let md5 = crypto.createHash('md5');
@@ -91,13 +92,29 @@ router.post('/login', async ctx => {
     password: md5(password + MD5_SUFFIX),
   }).then(result => {
     if (result) {
-      // ctx.request.session = result
-      ctx.session.userInfo = result
-      responseClient(ctx, 200, 0, '登录成功', result);
+      // session 实质是将加密的session存入cookie nuxt不同req无法共享session（可以用redis解决 store）
+      // 正常请求改为token nuxt server端使用session
+      const jwtData = {
+        name: result.name,
+        email: result.emial
+      }
+      const token = jsonwebtoken.sign({
+        data: jwtData,
+        exp: Math.floor(Date.now() / 1000) + (60 * 60),
+      }, 'infun')
+      const  fields = {
+        token,
+        userInfo: result
+      }
+      responseClient(ctx, 200, 0, '登录成功', fields);
     } else {
       responseClient(ctx, 400, 2, '用户名或者密码错误');
     }
   })
+})
+
+router.post('/authenticated', ctx => {
+  console.log(ctx.request.body)
 })
 
 module.exports = router

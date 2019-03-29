@@ -25,6 +25,7 @@ var putPolicy = new qiniu.rs.PutPolicy(options)
 var uploadToken = putPolicy.uploadToken(mac)
 
 router.get('/index', async (ctx, next) => {
+	console.log(ctx.session)
 	let req = ctx.request.body
 	await Article.find().then(result => {
 		if (result) {
