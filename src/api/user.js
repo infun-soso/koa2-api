@@ -113,8 +113,4 @@ router.post('/login', async ctx => {
   })
 })
 
-router.post('/authenticated', ctx => {
-  console.log(ctx.request.body)
-})
-
 module.exports = router
